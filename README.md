@@ -65,7 +65,9 @@ Features
 
  * Trace statement to a log message.
 
- * Reformat super to this.\_super.
+ * Reformat super to 
+ 
+    this._super
 
  * Preserve class comment.
 
@@ -83,13 +85,30 @@ Features
 
  * Typecasting with int(float) syntax using Math.floor.
 
- * Strip wildcard data type (:\*).
+ * Strip wildcard data type
+ 
+    :*
 
+ * Vector to Array.  
+
+    :args *.as
+    :argdo %s/Vector.<[^>]*>/Array/gIce | update
+
+ * Vector literal to Array literal.
+
+    :args *.as
+    :argdo %s/new <[^>]*>//gIce | update
+
+ * Nested Vector to Array.
+
+    :lvimgrep /Vector./ *.as
 
 Not supported
 =============
 
 Vim commands are listed for some of these manual translations.
+
+ * Ignore variables that are commented out by a line comment.
 
  * Block comment in a function.
 
@@ -100,13 +119,17 @@ Vim commands are listed for some of these manual translations.
 
  * Block comment on a single line.
 
- * Logical-assignments such as:  a ||= b.  Instead does support a = a || b
+ * Logical-assignments such as:  a ||= b.  Instead does support 
+ 
+    a = a || b
 
  * Set undefined static property to undefined.
 
  * Static-only class needs no extend, so "extend" part could be replaced with an empty object {}.
 
- * Integer constants like int.MAX_VALUE.
+ * Integer constants like:
+
+    int.MAX_VALUE
 
  * Scoping is unaware of quoted string context.
 
@@ -118,7 +141,9 @@ Vim commands are listed for some of these manual translations.
 
     :lvimgrep / extends / *.as
 
- * Reformat super call to another function to this.\_super.
+ * Reformat super call to another function to 
+ 
+    this._super.
 
     :lvimgrep /\<super\>/ *.as
 
@@ -130,7 +155,9 @@ Vim commands are listed for some of these manual translations.
 
     :lvimgrep /^        \/\/ / *.as
 
- * Integer constants, such as "int.MIN\_VALUE"
+ * Integer constants, such as
+ 
+    int.MIN_VALUE
 
     :lvimgrep /\<int\./ *.as
 

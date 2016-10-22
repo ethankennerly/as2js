@@ -48,6 +48,15 @@ staticPropP =  re.compile(commentPrefix
     + staticNamespace
     + '\s+' + localVariable, re.S)
 
+vectorType = 'Vector\.<[^>]*>+'
+vectorTypeP = re.compile(vectorType, re.S)
+arrayType = 'Array'
+vectorLiteral = 'new\s+<[^>]*>+'
+vectorLiteralP = re.compile(vectorLiteral, re.S)
+vectorConstructor = 'new\s+Vector\.<[^>]*>+\(\d*\)'
+vectorConstructorP = re.compile(vectorConstructor, re.S)
+arrayConstructor = 'new Array()'
+
 
 def staticProps(klassName, klassContent):
     r"""
@@ -842,8 +851,22 @@ def findClassAndContent(text):
         commentNameContents.append(nameContents[0][1])
         return commentNameContents
 
+def convertVector(text):
+    """
+    >>> convertVector('var v:Vector.<A> = new <A>[new A()]')
+    'var v:Array = [new A()]'
+    >>> convertVector('var aVector:Vector.<int> = new Vector.<int>(3)')
+    'var aVector:Array = new Array()'
+    >>> convertVector('var aVector:Vector.<Vector.<int>> = new Vector.<Vector.<int>>(2)')
+    'var aVector:Array = new Array()'
+    """
+    text = re.sub(vectorConstructorP, arrayConstructor, text)
+    text = re.sub(vectorTypeP, arrayType, text)
+    text = re.sub(vectorLiteralP, '', text)
+    return text
 
 def convert(text):
+    text = convertVector(text)
     klassComment, klassName, klassContent = findClassAndContent(text)
 
     str = '';
